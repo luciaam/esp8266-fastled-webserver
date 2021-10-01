@@ -4,6 +4,8 @@
 
 // Modified by Jason Coon to replace "magic numbers" with customizable inputs via sliders in the web app.
 
+extern CRGBPalette16 gCurrentTheme;
+
 void colorwavesPlayground( CRGB* ledarray, uint16_t numleds, CRGBPalette16& palette)
 {
   static uint16_t sPseudotime = 0;
@@ -58,5 +60,5 @@ void colorwavesPlayground( CRGB* ledarray, uint16_t numleds, CRGBPalette16& pale
 
 void colorWavesPlayground()
 {
-  colorwavesPlayground(leds, NUM_LEDS, gCurrentPalette);
+  colorwavesPlayground(leds, NUM_LEDS, gCurrentTheme);
 }
