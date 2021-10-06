@@ -26,19 +26,22 @@
 typedef std::function<void(String)> FieldSetter;
 typedef std::function<String()> FieldGetter;
 
-extern const String NumberFieldType;
-extern const String BooleanFieldType;
-extern const String SelectFieldType;
-extern const String ColorFieldType;
-extern const String SectionFieldType;
-extern const String StringFieldType;
-extern const String LabelFieldType;
+enum FieldType
+{
+  NumberFieldType,
+  BooleanFieldType,
+  SelectFieldType,
+  ColorFieldType,
+  SectionFieldType,
+  StringFieldType,
+  LabelFieldType,
+};
 
 struct Field
 {
   String name;
   String label;
-  String type;
+  FieldType type;
   uint8_t min;
   uint8_t max;
   FieldGetter getValue;

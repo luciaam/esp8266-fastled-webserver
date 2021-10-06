@@ -12,15 +12,17 @@ WebServer::WebServer(Settings &settings, PatternManager &patternManager)
           {"name", "Name", LabelFieldType, 0, 0, [this]()
            { return getName(); }},
 
-          {"preturn ower", "Power", BooleanFieldType, 0, 1, [this]()
+          {"power", "Power", BooleanFieldType, 0, 1, [this]()
            { return getPower(); }},
           {"brightness", "Brightness", NumberFieldType, 1, 255, [this]()
            { return getBrightness(); }},
-          {"pattern", "Pattern", SelectFieldType, 0, (uint8_t) _patternManager.getPatterns().size(), [this]()
-           { return getPattern(); }, [this]()
+          {"pattern", "Pattern", SelectFieldType, 0, (uint8_t)_patternManager.getPatterns().size(), [this]()
+           { return getPattern(); },
+           [this]()
            { return getPatterns(); }},
-          {"palette", "Palette", SelectFieldType, 0, (uint8_t)_patternManager.getThemes().size(), [this]()
-           { return getTheme();}, [this]()
+          {"theme", "Theme", SelectFieldType, 0, (uint8_t)_patternManager.getThemes().size(), [this]()
+           { return getTheme(); },
+           [this]()
            { return getThemes(); }},
           {"speed", "Speed", NumberFieldType, 1, 255, [this]()
            { return getSpeed(); }},

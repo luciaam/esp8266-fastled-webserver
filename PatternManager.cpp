@@ -15,7 +15,7 @@ CRGB leds[NUM_LEDS];
 // Forward declarations of an array of cpt-city gradient palettes, and
 // a count of how many there are.  The actual color palette definitions
 // are at the bottom of this file.
-extern const std::array<TProgmemRGBGradientPalettePtr,33> gGradientPalettes;
+extern const std::array<TProgmemRGBGradientPalettePtr, 33> gGradientPalettes;
 
 uint8_t gCurrentThemeNumber = 0;
 CRGBPalette16 gCurrentTheme(CRGB::Black);
@@ -27,8 +27,10 @@ PatternManager::PatternManager(Settings &settings) : _settings(settings)
 {
     // List of patterns to cycle through. Each is defined as a separate function below.
     _patterns = {
-        {"Pride", [this](){pride();}},
-        {"Color Waves", [this](){colorWaves();}},
+        {"Pride", [this]()
+         { pride(); }},
+        {"Color Waves", [this]()
+         { colorWaves(); }},
 
         {"Pride Playground", pridePlayground},
         {"Color Waves Playground", colorWavesPlayground},
@@ -55,15 +57,23 @@ PatternManager::PatternManager(Settings &settings) : _settings(settings)
         {"Cloud 2 Twinkles", cloud2Twinkles},
         {"Ocean Twinkles", oceanTwinkles},
 
-        {"Rainbow", [this](){rainbow();}},
-        {"Rainbow With Glitter", [this](){rainbowWithGlitter();}},
-        {"Solid Rainbow", [this](){rainbowSolid();}},
-        {"Confetti", [this](){confetti();}},
-        {"Sinelon", [this](){sinelon();}},
-        {"Beat",[this](){ bpm();}},
-        {"Juggle", [this](){juggle();}},
+        {"Rainbow", [this]()
+         { rainbow(); }},
+        {"Rainbow With Glitter", [this]()
+         { rainbowWithGlitter(); }},
+        {"Solid Rainbow", [this]()
+         { rainbowSolid(); }},
+        {"Confetti", [this]()
+         { confetti(); }},
+        {"Sinelon", [this]()
+         { sinelon(); }},
+        {"Beat", [this]()
+         { bpm(); }},
+        {"Juggle", [this]()
+         { juggle(); }},
 
-        {"Solid Color", [this](){showSolidColor();}}};
+        {"Solid Color", [this]()
+         { showSolidColor(); }}};
 
     _themes = {
         {"Rainbow", RainbowColors_p},
@@ -75,16 +85,16 @@ PatternManager::PatternManager(Settings &settings) : _settings(settings)
         {"Party", PartyColors_p},
         {"Heat", HeatColors_p},
     };
-
-    if (_settings.currentPatternIndex > _patterns.size())
-    {
-        _settings.currentPatternIndex = 0;
-        _settings.save();
-    }
 }
 
 void PatternManager::setup()
 {
+    if (_settings.currentPatternIndex >= _patterns.size())
+    {
+        _settings.currentPatternIndex = 0;
+        _settings.save();
+    }
+
     FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS); // for WS2812 (Neopixel)
     FastLED.setDither(false);
     FastLED.setCorrection(TypicalLEDStrip);
@@ -118,12 +128,12 @@ void PatternManager::switchTo(size_t patternIdx)
 
 void PatternManager::nextPattern()
 {
-    _settings.currentPatternIndex = ++_settings.currentPatternIndex % _patterns.size();
+    _settings.currentPatternIndex = (++_settings.currentPatternIndex) % _patterns.size();
 
-    // if (autoplay == 0)
-    // {
-    //     writeAndCommitSettings();
-    // }
+    if (_settings.autoplay == 0)
+    {
+        _settings.save();
+    }
 }
 
 void PatternManager::show()
@@ -140,10 +150,9 @@ void PatternManager::show()
     // change to a new cpt-city gradient palette
     EVERY_N_SECONDS(10)
     {
-        gCurrentThemeNumber = (gCurrentThemeNumber+1) % gGradientPalettes.size();
+        gCurrentThemeNumber = (gCurrentThemeNumber + 1) % gGradientPalettes.size();
         gTargetTheme = gGradientPalettes[gCurrentThemeNumber];
     }
-
     EVERY_N_MILLISECONDS(40)
     {
         // slowly blend the current palette to the next
@@ -159,7 +168,6 @@ void PatternManager::show()
 
     // Call the current pattern function once, updating the 'leds' array
     _patterns[_settings.currentPatternIndex].second();
-
     FastLED.show();
 }
 
@@ -169,11 +177,13 @@ void PatternManager::delay()
     FastLED.delay(1000 / FRAMES_PER_SECOND);
 }
 
-const std::vector<std::pair<String, std::function<void()>>>& PatternManager::getPatterns() const {
+const std::vector<std::pair<String, std::function<void()>>> &PatternManager::getPatterns() const
+{
     return _patterns;
 }
 
-const std::vector<std::pair<String, CRGBPalette16>>& PatternManager::getThemes() const {
+const std::vector<std::pair<String, CRGBPalette16>> &PatternManager::getThemes() const
+{
     return _themes;
 }
 
@@ -393,7 +403,6 @@ void PatternManager::addGlitter(uint8_t chanceOfGlitter)
         leds[random16(NUM_LEDS)] += CRGB::White;
     }
 }
-
 
 uint8_t PatternManager::beatsaw8(accum88 beats_per_minute, uint8_t lowest, uint8_t highest,
                                  uint32_t timebase, uint8_t phase_offset)

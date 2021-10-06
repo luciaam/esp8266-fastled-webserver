@@ -31,7 +31,6 @@
 // #include <FS.h>
 // #include "FSBrowser.h"
 
-
 Settings settings;
 PatternManager patternManager(settings);
 WebServer webServer(settings, patternManager);
@@ -44,8 +43,6 @@ void setup()
   Serial.begin(115200);
   Serial.setDebugOutput(true);
 
-  // TODO check if moving the following line to _settings.load() actually works?
-  // EEPROM.begin(512);
   settings.load();
   patternManager.setup();
 

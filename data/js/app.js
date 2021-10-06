@@ -25,7 +25,7 @@ var ignoreColorChange = false;
 
 var allData = {};
 
-$(document).ready(function() {
+$(document).ready(function () {
   $("#status").html("Connecting, please wait...");
 
   $("#btnTop").click(function () {
@@ -85,21 +85,21 @@ $(document).ready(function() {
     });
   });
 
-  $("#btnSave").click( function() {
+  $("#btnSave").click(function () {
     var text = $("#textareaFields").val();
     var filename = $("#inputFilename").val() || "preset1.json";
-    var blob = new Blob([text], {type: "application/json;charset=utf-8"});
+    var blob = new Blob([text], { type: "application/json;charset=utf-8" });
     saveAs(blob, filename);
   });
 
-  $("#btnOpen").click( function() {
-    $('#inputFile').click();
+  $("#btnOpen").click(function () {
+    $("#inputFile").click();
   });
 
-  $('#inputFile').change(function(e) {
+  $("#inputFile").change(function (e) {
     var files = e.target.files;
     if (files.length < 1) {
-        return;
+      return;
     }
     var file = files[0];
     var reader = new FileReader();
@@ -108,49 +108,48 @@ $(document).ready(function() {
     $(this).val("");
   });
 
-  function onFileLoaded (e) {
+  function onFileLoaded(e) {
     const result = e.target.result;
     const json = JSON.parse(result);
     $("#textareaFields").val(JSON.stringify(json, null, 2));
   }
 
-  $.get(urlBase + "all", function(data) {
-      $("#status").html("Loading, please wait...");
+  $.get(urlBase + "all", function (data) {
+    $("#status").html("Loading, please wait...");
 
-      allData = data;
+    allData = data;
 
-      $.each(data, function(index, field) {
-        if (field.type == "Number") {
-          addNumberField(field);
-        } else if (field.type == "Boolean") {
-          addBooleanField(field);
-        } else if (field.type == "Select") {
-          addSelectField(field);
-        } else if (field.type == "Color") {
-          addColorFieldPalette(field);
-          addColorFieldPicker(field);
-        } else if (field.type == "Section") {
-          addSectionField(field);
-        } else if (field.type == "String") {
-          addStringField(field, false);
-        } else if (field.type == "Label") {
-          addStringField(field, true);
-        }
-      });
-
-      $(".minicolors").minicolors({
-        theme: "bootstrap",
-        changeDelay: 200,
-        control: "wheel",
-        format: "rgb",
-        inline: true
-      });
-
-      $("#status").html("Ready");
-    })
-    .fail(function(errorThrown) {
-      console.log(errorThrown);
+    $.each(data, function (index, field) {
+      if (field.type == "Number") {
+        addNumberField(field);
+      } else if (field.type == "Boolean") {
+        addBooleanField(field);
+      } else if (field.type == "Select") {
+        addSelectField(field);
+      } else if (field.type == "Color") {
+        addColorFieldPalette(field);
+        addColorFieldPicker(field);
+      } else if (field.type == "Section") {
+        addSectionField(field);
+      } else if (field.type == "String") {
+        addStringField(field, false);
+      } else if (field.type == "Label") {
+        addStringField(field, true);
+      }
     });
+
+    $(".minicolors").minicolors({
+      theme: "bootstrap",
+      changeDelay: 200,
+      control: "wheel",
+      format: "rgb",
+      inline: true,
+    });
+
+    $("#status").html("Ready");
+  }).fail(function (errorThrown) {
+    console.log(errorThrown);
+  });
 });
 
 function addNumberField(field) {
@@ -181,18 +180,18 @@ function addNumberField(field) {
   input.val(field.value);
   slider.val(field.value);
 
-  slider.on("change mousemove", function() {
+  slider.on("change mousemove", function () {
     input.val($(this).val());
   });
 
-  slider.on("change", function() {
+  slider.on("change", function () {
     var value = $(this).val();
     input.val(value);
     field.value = value;
     delayPostValue(field.name, value);
   });
 
-  input.on("change", function() {
+  input.on("change", function () {
     var value = $(this).val();
     slider.val(value);
     field.value = value;
@@ -224,11 +223,11 @@ function addBooleanField(field) {
   btnOn.attr("class", field.value ? "btn btn-primary" : "btn btn-default");
   btnOff.attr("class", !field.value ? "btn btn-primary" : "btn btn-default");
 
-  btnOn.click(function() {
-    setBooleanFieldValue(field, btnOn, btnOff, 1)
+  btnOn.click(function () {
+    setBooleanFieldValue(field, btnOn, btnOff, 1);
   });
-  btnOff.click(function() {
-    setBooleanFieldValue(field, btnOn, btnOff, 0)
+  btnOff.click(function () {
+    setBooleanFieldValue(field, btnOn, btnOff, 0);
   });
 
   $("#form").append(template);
@@ -259,7 +258,7 @@ function addSelectField(field) {
 
   select.val(field.value);
 
-  select.change(function() {
+  select.change(function () {
     var value = template.find("#" + id + " option:selected").index();
     postValue(field.name, value);
   });
@@ -267,22 +266,20 @@ function addSelectField(field) {
   var previousButton = template.find(".btn-previous");
   var nextButton = template.find(".btn-next");
 
-  previousButton.click(function() {
+  previousButton.click(function () {
     var value = template.find("#" + id + " option:selected").index();
     var count = select.find("option").length;
     value--;
-    if(value < 0)
-      value = count - 1;
+    if (value < 0) value = count - 1;
     select.val(value);
     postValue(field.name, value);
   });
 
-  nextButton.click(function() {
+  nextButton.click(function () {
     var value = template.find("#" + id + " option:selected").index();
     var count = select.find("option").length;
     value++;
-    if(value >= count)
-      value = 0;
+    if (value >= count) value = 0;
     select.val(value);
     postValue(field.name, value);
   });
@@ -301,11 +298,9 @@ function addColorFieldPicker(field) {
   var input = template.find(".minicolors");
   input.attr("id", id);
 
-  if(!field.value.startsWith("rgb("))
-    field.value = "rgb(" + field.value;
+  if (!field.value.startsWith("rgb(")) field.value = "rgb(" + field.value;
 
-  if(!field.value.endsWith(")"))
-    field.value += ")";
+  if (!field.value.endsWith(")")) field.value += ")";
 
   input.val(field.value);
 
@@ -335,7 +330,7 @@ function addColorFieldPicker(field) {
   greenSlider.val(components.g);
   blueSlider.val(components.b);
 
-  redInput.on("change", function() {
+  redInput.on("change", function () {
     var value = $("#" + id).val();
     var r = $(this).val();
     var components = rgbToComponents(value);
@@ -344,7 +339,7 @@ function addColorFieldPicker(field) {
     redSlider.val(r);
   });
 
-  greenInput.on("change", function() {
+  greenInput.on("change", function () {
     var value = $("#" + id).val();
     var g = $(this).val();
     var components = rgbToComponents(value);
@@ -353,7 +348,7 @@ function addColorFieldPicker(field) {
     greenSlider.val(g);
   });
 
-  blueInput.on("change", function() {
+  blueInput.on("change", function () {
     var value = $("#" + id).val();
     var b = $(this).val();
     var components = rgbToComponents(value);
@@ -362,7 +357,7 @@ function addColorFieldPicker(field) {
     blueSlider.val(b);
   });
 
-  redSlider.on("change", function() {
+  redSlider.on("change", function () {
     var value = $("#" + id).val();
     var r = $(this).val();
     var components = rgbToComponents(value);
@@ -371,7 +366,7 @@ function addColorFieldPicker(field) {
     redInput.val(r);
   });
 
-  greenSlider.on("change", function() {
+  greenSlider.on("change", function () {
     var value = $("#" + id).val();
     var g = $(this).val();
     var components = rgbToComponents(value);
@@ -380,7 +375,7 @@ function addColorFieldPicker(field) {
     greenInput.val(g);
   });
 
-  blueSlider.on("change", function() {
+  blueSlider.on("change", function () {
     var value = $("#" + id).val();
     var b = $(this).val();
     var components = rgbToComponents(value);
@@ -389,19 +384,19 @@ function addColorFieldPicker(field) {
     blueInput.val(b);
   });
 
-  redSlider.on("change mousemove", function() {
+  redSlider.on("change mousemove", function () {
     redInput.val($(this).val());
   });
 
-  greenSlider.on("change mousemove", function() {
+  greenSlider.on("change mousemove", function () {
     greenInput.val($(this).val());
   });
 
-  blueSlider.on("change mousemove", function() {
+  blueSlider.on("change mousemove", function () {
     blueInput.val($(this).val());
   });
 
-  input.on("change", function() {
+  input.on("change", function () {
     if (ignoreColorChange) return;
 
     var value = $(this).val();
@@ -430,9 +425,9 @@ function addColorFieldPalette(field) {
   var label = template.find(".control-label");
   label.text(field.label);
 
-  buttons.each(function(index, button) {
-    $(button).click(function() {
-      var rgb = $(this).css('backgroundColor');
+  buttons.each(function (index, button) {
+    $(button).click(function () {
+      var rgb = $(this).css("backgroundColor");
       var components = rgbToComponents(rgb);
 
       field.value = components.r + "," + components.g + "," + components.b;
@@ -507,7 +502,6 @@ function updateFieldValue(name, value) {
 
     btnOn.attr("class", value ? "btn btn-primary" : "btn btn-default");
     btnOff.attr("class", !value ? "btn btn-primary" : "btn btn-default");
-
   } else if (type == "Select") {
     var select = group.find(".form-control");
     select.val(value);
@@ -515,7 +509,7 @@ function updateFieldValue(name, value) {
     var input = group.find(".form-control");
     input.val("rgb(" + value + ")");
   }
-};
+}
 
 function setBooleanFieldValue(field, btnOn, btnOff, value) {
   field.value = value;
@@ -542,16 +536,16 @@ function postValue(name, value) {
     "solidColor",
     "pattern",
     "patternName",
-    "palette",
-    "paletteName",
+    "theme",
+    "themeName",
     "brightness",
     "autoplay",
     "autoplayDuration",
     "showClock",
-    "clockBackgroundFade"
+    "clockBackgroundFade",
   ];
 
-  if (oldFieldNames.some(f => f === name)) {
+  if (oldFieldNames.some((f) => f === name)) {
     $.post(urlBase + name + "?value=" + value, body, function (data) {
       if (data.name != null) {
         $("#status").html("Set " + name + ": " + data.name);
@@ -560,34 +554,53 @@ function postValue(name, value) {
       }
     });
   } else {
-    $.post(urlBase + "fieldValue?name=" + name + "&value=" + value, body, function (data) {
+    $.post(
+      urlBase + "fieldValue?name=" + name + "&value=" + value,
+      body,
+      function (data) {
         if (data.name != null) {
           $("#status").html("Set " + name + ": " + data.name);
         } else {
           $("#status").html("Set " + name + ": " + data);
         }
-    });
+      }
+    );
   }
 }
 
 function delayPostValue(name, value) {
   clearTimeout(postValueTimer);
-  postValueTimer = setTimeout(function() {
+  postValueTimer = setTimeout(function () {
     postValue(name, value);
   }, 300);
 }
 
 function postColor(name, value) {
-  $("#status").html("Setting " + name + ": " + value.r + "," + value.g + "," + value.b + ", please wait...");
+  $("#status").html(
+    "Setting " +
+      name +
+      ": " +
+      value.r +
+      "," +
+      value.g +
+      "," +
+      value.b +
+      ", please wait..."
+  );
 
   var body = { name: name, r: value.r, g: value.g, b: value.b };
 
-  $.post(urlBase + name + "?r=" + value.r + "&g=" + value.g + "&b=" + value.b, body, function(data) {
-    $("#status").html("Set " + name + ": " + data);
-  })
-  .fail(function(textStatus, errorThrown) { $("#status").html("Fail: " + textStatus + " " + errorThrown); });
+  $.post(
+    urlBase + name + "?r=" + value.r + "&g=" + value.g + "&b=" + value.b,
+    body,
+    function (data) {
+      $("#status").html("Set " + name + ": " + data);
+    }
+  ).fail(function (textStatus, errorThrown) {
+    $("#status").html("Fail: " + textStatus + " " + errorThrown);
+  });
 
-  if (name === 'solidColor') {
+  if (name === "solidColor") {
     const option = $("#input-pattern option:contains('Solid Color')")[0];
     $("#input-pattern").val(option.index);
   }
@@ -595,7 +608,7 @@ function postColor(name, value) {
 
 function delayPostColor(name, value) {
   clearTimeout(postColorTimer);
-  postColorTimer = setTimeout(function() {
+  postColorTimer = setTimeout(function () {
     postColor(name, value);
   }, 300);
 }
