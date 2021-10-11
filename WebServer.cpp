@@ -9,9 +9,6 @@
 WebServer::WebServer(Settings &settings, PatternManager &patternManager)
     : _settings(settings), _patternManager(patternManager),
       fields({
-          {"name", "Name", LabelFieldType, 0, 0, [this]()
-           { return getName(); }},
-
           {"power", "Power", BooleanFieldType, 0, 1, [this]()
            { return getPower(); }},
           {"brightness", "Brightness", NumberFieldType, 1, 255, [this]()
@@ -271,6 +268,16 @@ void WebServer::setup()
                       sendString(String(_settings.autoplayDuration));
                   });
 
+    _webServer.on("/wifi", HTTP_POST, [this]()
+                  {
+                      String ssid = _webServer.arg("ssid");
+                      String password = _webServer.arg("password");
+                      setWiFi(ssid, password);
+
+                      _webServer.sendHeader("Access-Control-Allow-Origin", "*");
+                      _webServer.send(200, "text/json", "wifi saved");
+                  });
+
     // //list directory
     // _webServer.on("/list", HTTP_GET, handleFileList);
     // //load editor
@@ -337,6 +344,14 @@ void WebServer::setAutoplayDuration(uint8_t value)
     _settings.autoplayDuration = value;
     _settings.save();
     // autoPlayTimeout = millis() + (_settings.autoplayDuration * 1000);
+}
+
+void WebServer::setWiFi(const String &ssid, const String &password)
+{
+    _settings.ssid = ssid;
+    _settings.password = password;
+    _settings.save();
+    ESP.reset();
 }
 
 //Getter
@@ -424,11 +439,6 @@ String WebServer::getTwinkleDensity()
 String WebServer::getCoolLikeIncandescent()
 {
     return String(_settings.coolLikeIncandescent);
-}
-
-String WebServer::getName()
-{
-    return _settings.SSID;
 }
 
 String WebServer::getSaturationBpm()

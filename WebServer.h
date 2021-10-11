@@ -25,7 +25,8 @@ private:
     void setPower(uint8_t value);
     void setAutoplay(uint8_t value);
     void setAutoplayDuration(uint8_t value);
-    
+    void setWiFi(const String &ssid, const String &password);
+
     std::vector<Field> fields;
     String getPattern();
     String getPatterns();
@@ -40,7 +41,6 @@ private:
     String getTwinkleSpeed();
     String getTwinkleDensity();
     String getCoolLikeIncandescent();
-    String getName();
     // Pride Playground fields
     String getSaturationBpm();
     void setSaturationBpm(String value);
@@ -78,7 +78,6 @@ private:
     void setSHueMin(String value);
     String getSHueMax();
     void setSHueMax(String value);
-    
 };
 
 #endif

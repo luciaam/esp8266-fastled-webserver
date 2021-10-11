@@ -3,7 +3,7 @@
 void Settings::load()
 {
     EEPROM.begin(512);
-    
+
     // check for "magic number" so we know settings have been written to EEPROM
     // and it's not just full of random bytes
     if (EEPROM.read(511) != 55)
@@ -35,6 +35,20 @@ void Settings::load()
     twinkleDensity = EEPROM.read(10);
 
     coolLikeIncandescent = EEPROM.read(13);
+
+    ssid = "";
+    auto ssidLength = EEPROM.read(21);
+    for (int i = 0; i < ssidLength; ++i)
+    {
+        ssid += (char)EEPROM.read(23 + i);
+    }
+
+    password = "";
+    auto passwordLength = EEPROM.read(22);
+    for (int i = 0; i < passwordLength; ++i)
+    {
+        password += (char)EEPROM.read(23 + ssidLength + i);
+    }
 }
 
 void Settings::save()
@@ -50,6 +64,18 @@ void Settings::save()
     EEPROM.write(8, currentThemeIndex);
     EEPROM.write(9, twinkleSpeed);
     EEPROM.write(10, twinkleDensity);
+    EEPROM.write(13, coolLikeIncandescent);
+
+    EEPROM.write(21, ssid.length());
+    EEPROM.write(22, password.length());
+    for (int i = 0; i < ssid.length(); ++i)
+    {
+        EEPROM.write(23 + i, ssid[i]);
+    }
+    for (int i = 0; i < password.length(); ++i)
+    {
+        EEPROM.write((23 + ssid.length()) + i, password[i]);
+    }
 
     EEPROM.write(511, 55);
     EEPROM.commit();

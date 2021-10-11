@@ -7,11 +7,14 @@
 
 struct Settings
 {
-    const String SSID = "Schesa";
-    const String PASSWORD = "BlingBling";
+    const String AP_SSID = "Schesa";
+    const String AP_PASSWORD = "BlingBling";
+
+    String ssid = "";
+    String password = "";
 
     CRGB solidColor = CRGB::Blue;
-    uint8_t currentThemeIndex = 0;   
+    uint8_t currentThemeIndex = 0;
 
     /* data */
 
@@ -35,10 +38,10 @@ struct Settings
     uint8_t power = 1;
     uint8_t brightness = 50;
 
-// TODO ???
-    uint8_t& twinkleSpeed = ::twinkleSpeed;
-    uint8_t& twinkleDensity = ::twinkleDensity;
-    uint8_t& coolLikeIncandescent = ::coolLikeIncandescent;
+    // TODO ???
+    uint8_t &twinkleSpeed = ::twinkleSpeed;
+    uint8_t &twinkleDensity = ::twinkleDensity;
+    uint8_t &coolLikeIncandescent = ::coolLikeIncandescent;
 
     void load();
     void save();

@@ -81,20 +81,35 @@ void setup()
     Serial.printf("\n");
   }
 
-  setupWifi(settings.SSID, settings.PASSWORD);
+  setupWifi(settings.ssid, settings.password);
   webServer.setup();
 }
 
 void setupWifi(const String &ssid, const String &password)
 {
-  if (!WiFi.softAP(ssid.c_str(), password.c_str()))
+  WiFi.disconnect(true);
+  delay(500);
+
+  if (!ssid.isEmpty())
   {
-    Serial.print("[ERROR] softAP setup failed!");
-    return;
+    WiFi.begin(ssid.c_str(), password.c_str());
+    delay(5000);
   }
 
-  delay(500); // slight delay to make sure we got an AP IP
-  Serial.println("Access Point IP is " + WiFi.softAPIP().toString());
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    Serial.printf("Connected to local WiFi %s\nIP is %s\n", ssid.c_str(), WiFi.localIP().toString());
+  }
+  else
+  {
+    if (!WiFi.softAP(settings.AP_SSID.c_str(), settings.AP_PASSWORD.c_str()))
+    {
+      Serial.println("[ERROR] softAP setup failed!");
+      return;
+    }
+    delay(500); // slight delay to make sure we got an AP IP
+    Serial.println("Access Point IP is " + WiFi.softAPIP().toString());
+  }
 }
 
 void loop()
@@ -103,14 +118,6 @@ void loop()
   random16_add_entropy(random(65535));
 
   webServer.handleClient();
-
-  static int status = WL_IDLE_STATUS;
-  if (status != WiFi.status())
-  {
-    status = WiFi.status();
-
-    Serial.printf("WiFi status changed: %d\n", status);
-  }
 
   patternManager.show();
   patternManager.delay();
