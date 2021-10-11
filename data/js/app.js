@@ -40,6 +40,7 @@ $(document).ready(function () {
   $("#btnScrollToBottom").click(function () {
     $([document.documentElement, document.body]).animate(
       {
+        // TODO fix this as accordionImportExport was removed
         scrollTop: $("#accordionImportExport").offset().top,
       },
       1000

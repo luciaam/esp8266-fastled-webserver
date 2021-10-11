@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ESP8266 + FastLED by Evil Genius Labs</title>
+  <title>Schesa LED</title>
 
   <!-- request CSS from internet CDN -->
   <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/minicolors.min.css">
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="icon" href="images/atom196.png">
+  <link rel="icon" href="images/led128.png">
 </head>
 
 <body>
@@ -29,25 +29,16 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="https://www.evilgeniuslabs.org" target="_blank"><img src="/images/atom196.png" style="width: 24px; height: 24px;" /></a>
-        <a class="navbar-brand" href="https://www.evilgeniuslabs.org" target="_blank">Evil Genius Labs</a>
+        <a class="navbar-brand"><img src="/images/led24.png" style="width: 24px; height: 24px;" /></a>
       </div>
       <div class="collapse navbar-collapse" id="navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="/">ESP8266 + FastLED <span class="sr-only">(current)</span></a></li>
-          <li><a href="/simple.htm" target="_blank" title="Simple Mode">Simple</a></li>
-          <li><a href="/edit.htm" target="_blank" title="Edit Files">Files</a></li>
-          <li><a href="/update" target="_blank" title="Update Firmware">Firmware</a></li>
-          <li>
-            <button id="btnScrollToBottom" type="button" class="btn btn-default navbar-btn btn-sm" aria-label="Scroll to bottom" title="Scroll to bottom">
-              <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-            </button>
-          </li>
-          <!-- <li><a href="/wifi.htm" target="_blank" title="Wi-Fi Settings">Wi-Fi</a></li> -->
+          <li class="active"><a href="/">Schesa LED<span class="sr-only">(current)</span></a></li>
+          <li><a href="/wifi.htm" title="Wi-Fi Settings">Wi-Fi</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li>
-            <a href="https://github.com/jasoncoon/esp8266-fastled-webserver">
+            <a href="https://github.com/luciaam/esp8266-fastled-webserver">
               <img style="height: 16px;" src="/images/github.ico" />
             </a>
           </li>
@@ -60,66 +51,6 @@
 
     <form class="form-horizontal" id="form">
     </form>
-
-    <div class="panel-group" id="accordionImportExport" role="tablist" aria-multiselectable="true">
-      <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="headingImportExport">
-          <h4 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#accordionImportExport" href="#collapseImportExport" aria-expanded="true" aria-controls="collapseImportExport">
-              Import / Export
-            </a>
-          </h4>
-        </div>
-        <div id="collapseImportExport" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingImportExport">
-          <div class="panel-body">
-            <div class="btn-toolbar" role="toolbar" aria-label="...">
-              <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-default" id="btnExport">
-                  <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-                  Load Values
-                </button>
-                <button type="button" class="btn btn-default" id="btnImport">
-                  <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
-                  Set Values
-                </button>
-                <button type="button" class="btn btn-default" id="btnCopy">
-                  <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
-                  Copy
-                </button>
-              </div>
-
-              <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-default" id="btnTop">
-                  <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
-                  Scroll to Top
-                </button>
-              </div>
-
-              <div class="btn-group" role="group" style="margin: 4px 4px">
-                <div class="input-group">
-                  <span class="input-group-btn input-group-custom">
-                    <input id="inputFilename" type="text" class="form-control" style="width: 180px;" value="preset1.json" />
-                    <button type="button" class="btn btn-default" id="btnSave">
-                      <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
-                      Save
-                    </button>
-
-                    <input type="file" id="inputFile" style="display: none;" />
-                    <button type="button" class="btn btn-default" id="btnOpen">
-                      <span class="glyphicon glyphicon-open" aria-hidden="true"></span>
-                      Open
-                    </button>
-                  </span>
-                </div>
-
-              </div>
-
-            </div>
-            <textarea id="textareaFields" class="form-control" rows="24"></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
 
   </div>
 
