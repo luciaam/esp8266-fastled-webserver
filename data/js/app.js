@@ -139,14 +139,6 @@ $(document).ready(function () {
       }
     });
 
-    $(".minicolors").minicolors({
-      theme: "bootstrap",
-      changeDelay: 200,
-      control: "wheel",
-      format: "rgb",
-      inline: true,
-    });
-
     $("#status").html("Ready");
   }).fail(function (errorThrown) {
     console.log(errorThrown);
@@ -213,16 +205,32 @@ function addBooleanField(field) {
   label.text(field.label);
 
   var btngroup = template.find(".btn-group");
-  btngroup.attr("id", "btn-group-" + field.name);
+  btngroup.attr("id", `btn-group-${field.name}`);
 
+  const idBtnOn = `btnOn-${field.name}`;
+  const idBtnOff = `btnOff-${field.name}`;
+
+  // set unique button ids
   var btnOn = template.find("#btnOn");
   var btnOff = template.find("#btnOff");
+  btnOn.attr("id", idBtnOn);
+  btnOn.attr("name", `${field.name}On`);
+  btnOff.attr("id", idBtnOff);
+  btnOff.attr("name", `${field.name}Off`);
 
-  btnOn.attr("id", "btnOn" + field.name);
-  btnOff.attr("id", "btnOff" + field.name);
+  // set unique label ids
+  var labelOn = template.find(`[for='btnOn']`);
+  var labelOff = template.find(`[for='btnOff']`);
+  labelOn.attr("for", idBtnOn);
+  labelOff.attr("for", idBtnOff);
 
-  btnOn.attr("class", field.value ? "btn btn-primary" : "btn btn-default");
-  btnOff.attr("class", !field.value ? "btn btn-primary" : "btn btn-default");
+  if (field.value) {
+    btnOn.prop("checked", true);
+    btnOff.prop("checked", false);
+  } else {
+    btnOn.prop("checked", false);
+    btnOff.prop("checked", true);
+  }
 
   btnOn.click(function () {
     setBooleanFieldValue(field, btnOn, btnOff, 1);
@@ -246,7 +254,7 @@ function addSelectField(field) {
   label.attr("for", id);
   label.text(field.label);
 
-  var select = template.find(".form-control");
+  var select = template.find(".form-select");
   select.attr("id", id);
 
   for (var i = 0; i < field.options.length; i++) {
@@ -290,131 +298,19 @@ function addSelectField(field) {
 
 function addColorFieldPicker(field) {
   var template = $("#colorTemplate").clone();
-
   template.attr("id", "form-group-" + field.name);
   template.attr("data-field-type", field.type);
 
-  var id = "input-" + field.name;
+  var colorInput = template.find(".form-control-color");
 
-  var input = template.find(".minicolors");
-  input.attr("id", id);
+  colorInput.val(rgbToHex(field.value));
+  colorInput.on("change", function () {
+    let hex = $("#input-solidColor").val();
+    let rgbValue = hexToRgb(hex);
+    field.value = `${rgbValue.r},${rgbValue.g},${rgbValue.b}`;
 
-  if (!field.value.startsWith("rgb(")) field.value = "rgb(" + field.value;
-
-  if (!field.value.endsWith(")")) field.value += ")";
-
-  input.val(field.value);
-
-  var components = rgbToComponents(field.value);
-
-  var redInput = template.find(".color-red-input");
-  var greenInput = template.find(".color-green-input");
-  var blueInput = template.find(".color-blue-input");
-
-  var redSlider = template.find(".color-red-slider");
-  var greenSlider = template.find(".color-green-slider");
-  var blueSlider = template.find(".color-blue-slider");
-
-  redInput.attr("id", id + "-red");
-  greenInput.attr("id", id + "-green");
-  blueInput.attr("id", id + "-blue");
-
-  redSlider.attr("id", id + "-red-slider");
-  greenSlider.attr("id", id + "-green-slider");
-  blueSlider.attr("id", id + "-blue-slider");
-
-  redInput.val(components.r);
-  greenInput.val(components.g);
-  blueInput.val(components.b);
-
-  redSlider.val(components.r);
-  greenSlider.val(components.g);
-  blueSlider.val(components.b);
-
-  redInput.on("change", function () {
-    var value = $("#" + id).val();
-    var r = $(this).val();
-    var components = rgbToComponents(value);
-    field.value = r + "," + components.g + "," + components.b;
-    $("#" + id).minicolors("value", "rgb(" + field.value + ")");
-    redSlider.val(r);
+    delayPostColor(field.name, rgbValue);
   });
-
-  greenInput.on("change", function () {
-    var value = $("#" + id).val();
-    var g = $(this).val();
-    var components = rgbToComponents(value);
-    field.value = components.r + "," + g + "," + components.b;
-    $("#" + id).minicolors("value", "rgb(" + field.value + ")");
-    greenSlider.val(g);
-  });
-
-  blueInput.on("change", function () {
-    var value = $("#" + id).val();
-    var b = $(this).val();
-    var components = rgbToComponents(value);
-    field.value = components.r + "," + components.g + "," + b;
-    $("#" + id).minicolors("value", "rgb(" + field.value + ")");
-    blueSlider.val(b);
-  });
-
-  redSlider.on("change", function () {
-    var value = $("#" + id).val();
-    var r = $(this).val();
-    var components = rgbToComponents(value);
-    field.value = r + "," + components.g + "," + components.b;
-    $("#" + id).minicolors("value", "rgb(" + field.value + ")");
-    redInput.val(r);
-  });
-
-  greenSlider.on("change", function () {
-    var value = $("#" + id).val();
-    var g = $(this).val();
-    var components = rgbToComponents(value);
-    field.value = components.r + "," + g + "," + components.b;
-    $("#" + id).minicolors("value", "rgb(" + field.value + ")");
-    greenInput.val(g);
-  });
-
-  blueSlider.on("change", function () {
-    var value = $("#" + id).val();
-    var b = $(this).val();
-    var components = rgbToComponents(value);
-    field.value = components.r + "," + components.g + "," + b;
-    $("#" + id).minicolors("value", "rgb(" + field.value + ")");
-    blueInput.val(b);
-  });
-
-  redSlider.on("change mousemove", function () {
-    redInput.val($(this).val());
-  });
-
-  greenSlider.on("change mousemove", function () {
-    greenInput.val($(this).val());
-  });
-
-  blueSlider.on("change mousemove", function () {
-    blueInput.val($(this).val());
-  });
-
-  input.on("change", function () {
-    if (ignoreColorChange) return;
-
-    var value = $(this).val();
-    var components = rgbToComponents(value);
-
-    redInput.val(components.r);
-    greenInput.val(components.g);
-    blueInput.val(components.b);
-
-    redSlider.val(components.r);
-    greenSlider.val(components.g);
-    blueSlider.val(components.b);
-
-    field.value = components.r + "," + components.g + "," + components.b;
-    delayPostColor(field.name, components);
-  });
-
   $("#form").append(template);
 }
 
@@ -433,17 +329,7 @@ function addColorFieldPalette(field) {
 
       field.value = components.r + "," + components.g + "," + components.b;
       postColor(field.name, components);
-
-      ignoreColorChange = true;
-      var id = "#input-" + field.name;
-      $(id).minicolors("value", "rgb(" + field.value + ")");
-      $(id + "-red").val(components.r);
-      $(id + "-green").val(components.g);
-      $(id + "-blue").val(components.b);
-      $(id + "-red-slider").val(components.r);
-      $(id + "-green-slider").val(components.g);
-      $(id + "-blue-slider").val(components.b);
-      ignoreColorChange = false;
+      $(`#input-${field.name}`).val(rgbToHex(field.value));
     });
   });
 
@@ -498,11 +384,14 @@ function updateFieldValue(name, value) {
     var input = group.find(".form-control");
     input.val(value);
   } else if (type == "Boolean") {
-    var btnOn = group.find("#btnOn" + name);
-    var btnOff = group.find("#btnOff" + name);
+    const btnOn = group.find("#btnOn-" + name);
+    const btnOff = group.find("#btnOff-" + name);
 
-    btnOn.attr("class", value ? "btn btn-primary" : "btn btn-default");
-    btnOff.attr("class", !value ? "btn btn-primary" : "btn btn-default");
+    btnOn.attr("class", value ? "btn btn-outline-primary" : "btn btn-primary");
+    btnOff.attr(
+      "class",
+      !value ? "btn btn-outline-primary" : "btn btn-primary"
+    );
   } else if (type == "Select") {
     var select = group.find(".form-control");
     select.val(value);
@@ -515,8 +404,13 @@ function updateFieldValue(name, value) {
 function setBooleanFieldValue(field, btnOn, btnOff, value) {
   field.value = value;
 
-  btnOn.attr("class", field.value ? "btn btn-primary" : "btn btn-default");
-  btnOff.attr("class", !field.value ? "btn btn-primary" : "btn btn-default");
+  if (field.value) {
+    btnOn.prop("checked", true);
+    btnOff.prop("checked", false);
+  } else {
+    btnOn.prop("checked", false);
+    btnOff.prop("checked", true);
+  }
 
   postValue(field.name, field.value);
 }
@@ -614,13 +508,30 @@ function delayPostColor(name, value) {
   }, 300);
 }
 
-function componentToHex(c) {
-  var hex = c.toString(16);
+function componentToHex(cNumber) {
+  var hex = cNumber.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
 }
 
-function rgbToHex(r, g, b) {
-  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+function rgbToHex(value) {
+  const rgb = value.split(",");
+  return (
+    "#" +
+    componentToHex(parseInt(rgb[0])) +
+    componentToHex(parseInt(rgb[1])) +
+    componentToHex(parseInt(rgb[2]))
+  );
+}
+
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null;
 }
 
 function rgbToComponents(rgb) {
